@@ -2,9 +2,33 @@ import { useState } from 'react';
 import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
 import './App.css';
+import { GoogleGenAI } from "@google/genai";
 
 function App() {
   const [showConversation, setShowConversation] = useState(false);
+  const [validApiKey, setValidApiKey] = useState(true);
+  const [apiKey, setApiKey] = useState('');
+
+  async function validateApiKey():Promise<void>{
+    const key:string = apiKey;
+    const ai = new GoogleGenAI({ apiKey: key });
+
+    async function main(){
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash-lite",
+        contents: "hello",
+        config:{
+          systemInstruction: "This is a test to check if api works. Please reponse with hello"
+        }
+      })
+    }
+    try{
+      await main();
+      setValidApiKey(true);
+    }catch{
+      setValidApiKey(false);
+    }
+  }
 
   return (
     <>
@@ -24,13 +48,14 @@ function App() {
           <div id="api-input-container" className='input-container'>
             <div>
               <label>
-                API Key: <input name="api-key" />
+                API Key: <input name="api-key" type='password' onChange={(e) => {setApiKey(e.target.value)}}/>
               </label>
-              <AwesomeButton size='small' >
+              <AwesomeButton size='small' 
+                onPress={() => {validateApiKey()}}>
                 validate
               </AwesomeButton>
             </div>
-            <p className='api-error hide error'>Error: api key is not valid</p>
+            {!validApiKey && <p className='api-error hide error'>Error: api key is not valid</p>}
           </div>
           <div id='youtube-input-container' className='input-container'>
             <div>
@@ -41,7 +66,7 @@ function App() {
                 get video
               </AwesomeButton>
             </div>
-            <p className='video-error hide error'>Error: not a valid video</p>
+              <p className='video-error error'>Error: not a valid video</p>
           </div>
           <AwesomeButton
             type='primary'>
