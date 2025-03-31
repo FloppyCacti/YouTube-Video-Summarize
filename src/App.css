@@ -32,13 +32,9 @@ div.input-container div{
   gap: 30px;
 }
 
-div.input-container p.show{
+div.input-container p.error{
   margin: 0px;
   color: red;
-}
-
-div.input-container p.hide{
-  display: none;
 }
 
 div#user-input-container{
