@@ -8,6 +8,9 @@ function App() {
   const [showConversation, setShowConversation] = useState(false);
   const [validApiKey, setValidApiKey] = useState(true);
   const [apiKey, setApiKey] = useState('');
+  const [validVideoLink, setValidVideoLink] = useState(true);
+  const [videoLink, setVideoLink] = useState('');
+  const [embedLink, setEmbedLink] = useState('');
 
   async function validateApiKey():Promise<void>{
     const key:string = apiKey;
@@ -27,6 +30,27 @@ function App() {
       setValidApiKey(true);
     }catch{
       setValidApiKey(false);
+    }
+  }
+
+  async function validateYoutubeVideo(): Promise<void>{
+    const regex: RegExp = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/;
+    const match = videoLink.match(regex);
+
+    if(!match){
+      setValidVideoLink(false);
+    }
+
+    const videoId = match[1];
+    const apiUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+    const link = `https://www.youtube.com/embed/${videoId}`;
+
+    try{
+      await fetch(apiUrl);
+      setValidVideoLink(true);
+      setEmbedLink(link);
+    }catch{
+      setValidVideoLink(false);
     }
   }
 
@@ -60,13 +84,22 @@ function App() {
           <div id='youtube-input-container' className='input-container'>
             <div>
               <label>
-                YouTube Video Link: <input name="video-link" />
+                YouTube Video Link: <input name="video-link" onChange={(e) => {setVideoLink(e.target.value)}}/>
               </label>
-              <AwesomeButton>
+              <AwesomeButton
+               onPress={validateYoutubeVideo}>
                 get video
               </AwesomeButton>
             </div>
-              <p className='video-error error'>Error: not a valid video</p>
+              {!validVideoLink && <p className='video-error error'>Error: not a valid video</p>}
+          </div>
+          <div id='youtube-embed'>
+            {embedLink && <iframe width='560' height='315'
+              src={embedLink}
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen>
+            </iframe>}
           </div>
           <AwesomeButton
             type='primary'>
