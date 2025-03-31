@@ -21,12 +21,28 @@ function App() {
       </header>
       <main>
         <div id="user-input-container">
-          <label>
-            API Key: <input name="api-key" />
-          </label>
-          <label>
-            YouTube Video Link: <input name="video-link" />
-          </label>
+          <div id="api-input-container" className='input-container'>
+            <div>
+              <label>
+                API Key: <input name="api-key" />
+              </label>
+              <AwesomeButton size='small' >
+                validate
+              </AwesomeButton>
+            </div>
+            <p className='api-error hide error'>Error: api key is not valid</p>
+          </div>
+          <div id='youtube-input-container' className='input-container'>
+            <div>
+              <label>
+                YouTube Video Link: <input name="video-link" />
+              </label>
+              <AwesomeButton>
+                get video
+              </AwesomeButton>
+            </div>
+            <p className='video-error hide error'>Error: not a valid video</p>
+          </div>
           <AwesomeButton
             type='primary'>
               Generate Summary

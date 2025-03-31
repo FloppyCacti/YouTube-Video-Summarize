@@ -20,6 +20,27 @@ h1{
   gap: 10px;
 }
 
+div.input-container{
+  display: flex;
+  flex-direction: column;
+}
+
+div.input-container div{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+div.input-container p.show{
+  margin: 0px;
+  color: red;
+}
+
+div.input-container p.hide{
+  display: none;
+}
+
 div#user-input-container{
   display: flex;
   flex-direction: column;
